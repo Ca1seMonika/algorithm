@@ -6,9 +6,7 @@
 #include<iostream>
 #include<vector>
 #include<algorithm>
-#include<map>
 #include<cstring>
-#include<functional>
 #include<queue>
 using namespace std;
 
@@ -91,8 +89,8 @@ struct Dijkstra {
 };
 
 int main() {
-    freopen("test.in", "r", stdin);
-    freopen("test.out", "w+", stdout);
+    freopen("sample.in", "r", stdin);
+    freopen("sample.out", "w+", stdout);
     Dijkstra* dij = new Dijkstra;
     int n, s, f, t, d, a;
     cin >> n >> s >> a;
