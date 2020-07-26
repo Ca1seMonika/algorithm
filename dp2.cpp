@@ -10,21 +10,36 @@
 #include<algorithm>
 using namespace std;
 const int maxn = 20 + 5;
-vector<pair<int, int>> rectangle;
+vector<pair<int, int> > rectangle;
 vector<int> G[maxn];
+int p[maxn];
 int d[maxn];
+ostream &operator<<( ostream &output, const pair<int, int> &rec ) {
+    output << "(" << rec.first << "," << rec.second << ")";
+    return output;
+}
 int solve(int i) {
     if(d[i] != -1)  return d[i];
     int m = 0;
     for(int j = 0; j < G[i].size(); j++){
-        m = max(m, solve(G[i][j]));
+        if(m < solve(G[i][j])){
+            m = solve(G[i][j]);
+            p[i] = G[i][j];
+        }
     }
     return d[i] = m + 1;
 }
-int main()  {
+
+void print(int r) {
+    cout << rectangle[r];
+    if(p[r] != -1)  print(p[r]);
+}
+
+int main() {
     freopen("test.in", "r", stdin);
     freopen("test.out", "w+", stdout);
     memset(d, -1, sizeof(d));
+    memset(p, -1, sizeof(p));
     int n, a, b;
     cin >> n;
     for(int i = 0; i < n; i++){
@@ -38,9 +53,14 @@ int main()  {
         }
         rectangle.push_back(make_pair(a, b));
     }
-    int m = 0;
+    int m = 0, r;
     for(int i = 0; i < n; i++){
-        m = max(m, solve(i));
+        if(m < solve(i)){
+            m = solve(i);
+            r = i;
+        }
     }
     cout << m << endl;
+    print(r);
+    return 0;
 }
