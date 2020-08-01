@@ -101,4 +101,6 @@ int main() {
     }
     dij->dijkstra(s);
     cout << dij->d[a] << endl;
+    delete dij;
+    return 0;
 }
