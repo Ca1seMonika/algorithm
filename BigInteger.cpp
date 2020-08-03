@@ -56,9 +56,3 @@ istream& operator>> (istream &is, BigInteger& x) {
     x = s;
     return is;
 }
-int main() {
-    BigInteger x;
-    BigInteger y;
-    cin >> x >> y;
-    cout << x + y;
-}
