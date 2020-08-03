@@ -41,6 +41,10 @@ struct BigInteger{
         }
         return c;
     }
+    BigInteger operator+= (const BigInteger& x) {
+        *this = *this + x;
+        return *this;
+    }
 };
 
 ostream& operator<< (ostream &os, const BigInteger& x) {
