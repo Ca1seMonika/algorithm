@@ -1,7 +1,7 @@
 #include<iostream>
 #include<WinSock2.h>
 #include<cstring>
-#pragma comment(lib, "ws2_32.lib")
+
 using namespace std;
 int main() {
     WORD wVersionRequest = MAKEWORD(2, 2);
