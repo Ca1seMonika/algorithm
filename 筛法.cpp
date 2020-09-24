@@ -51,14 +51,11 @@ int main() {
     //freopen("test.out", "w+", stdout);
     cin >> n;
     //esratosthenes(n);
-    clock_t t1 = clock(), t2;
     linesieve(n);
-    t2 = clock();
     int cnt = 0;
     for(int i = 2; i <= n; i++){
         if(num[i]) cnt++;
     }
-    cout << (double)(t2 - t1) / CLOCKS_PER_SEC;
     cout << endl << cnt;
 }
 
