@@ -1,106 +1,76 @@
-//***************************************
-//                                      
-//  Dijkstra算法的优化,时间复杂度mlogn     
-//                                      
-
-#include<iostream>
-#include<vector>
-#include<algorithm>
-#include<cstring>
-#include<queue>
+// 未优化版本
+#include<bits/stdc++.h>
 using namespace std;
-
-const int maxn = 20;
 const int INF = 0x3f3f3f3f;
+const int maxn = 100;
+int mp[maxn][maxn];
+int p[maxn];
+int d[maxn];
+void dijkstra1(int n) {
+    memset(mp, 0, sizeof(mp));
+    memset(d, 0x3f3f, sizeof(d));
+    bool vis[maxn] = {0};
 
-struct Edge {
-    int from, to, dis;
-    Edge(int u, int v, int w) : from(u), to(v), dis(w) {}
-};
+    d[0] = 0;
 
-struct HeapNode {
-    int d, i;
-    HeapNode(int a, int b) : d(a), i(b) {}
-    bool operator < (const HeapNode& rhs) const {
-        return d > rhs.d;
-    }
+    for(int i = 0; i < n; i++) {
+        int x, m = INF;
+        for(int j = 0; j < n; j++)  if(!vis[j] && d[j] < m) m = d[x = j]; 
+        vis[x] = 1;
+        for(int j = 0; j < n; j++)  if(d[j] > d[x] + mp[x][j]) {
+            d[j] = d[x] + mp[x][j];
+            p[j] = x;
+        }
+    } 
+}
+
+
+// 优先队列优化版本
+struct Side {
+    int form, to, dist;
+    Side(int from, int to, int dist): form(from), to(to), dist(dist) {}
 };
 
 struct Dijkstra {
     int n, m;
-    vector<Edge> edges;
-    vector<int> G[maxn];//储存从某点出发的边的编号
-    bool done[maxn];    //是否已永久标号
-    int d[maxn];        //s 到各个点的距离
-    int p[maxn];        //最短路中的上一条弧
+    vector<Side> sides;
+    vector<int> G[maxn];
+    int d[maxn];
+    int p[maxn];
+    bool vis[maxn];
+    typedef pair<int, int> pii;
 
     void init(int n) {
         this->n = n;
-        for(int i = 0; i < n; i++)  G[i].clear();
-        edges.clear();
+        for(int i = 0; i < n; i++) G[i].clear();
+        sides.clear();
+        memset(this->d, 0x3f3f, sizeof(this->d));
+        memset(this->vis, 0, sizeof(this->vis));
     }
 
-    void addedge(int from, int to, int dis) {
-        edges.push_back(Edge(from, to, dis));
-        m = edges.size();
-        G[from].push_back(m - 1);
+    void addSide(int from, int to, int dist) {
+        G[from].push_back(sides.size());
+        sides.push_back(Side(from, to, dist));
     }
-    /*  
-    void dijkstra(int s) {
-        memset(done, 0, sizeof(done));
-        memset(d, 0x3f, sizeof(d));
-        d[s] = 0;
-        for(int i = 0; i < n; i++){
-            int x, m = INF;
-            for(int j = 0; j < n; j++)  if(!done[j] && d[j] <= m)   m = d[x = j];
-            done[x] = 1;
-            for(int j = 0; j < G[x].size(); j++){
-                Edge e = edges[G[x][j]];
-                if(d[e.to] > d[x] + e.dis){
-                    d[e.to] = d[x] + e.dis;
-                    p[e.to] = G[x][j];
+
+    void dijkstra(int x) {
+        m = sides.size();
+        d[x] = 0;
+        
+        priority_queue<pii, vector<pii>, greater<pii>> Q;
+        Q.push(make_pair(0, x));
+        while(!Q.empty()) {
+            pii t = Q.top(); Q.pop();
+            if(vis[t.second])   continue;
+            vis[t.second] = 1;
+            for(int i = 0; i < G[t.second].size(); i++) {
+                auto& it = sides[G[t.second][i]];
+                if(d[it.to] > d[t.second] + it.dist) {
+                    d[it.to] = d[t.second] + it.dist;
+                    p[it.to] = t.second;
+                    Q.push(make_pair(d[it.to], it.to));
                 }
-            }
-        }
-    }
-    */
-    //队列优化
-    void dijkstra(int s) {
-        memset(done, 0, sizeof(done));
-        memset(d, 0x3f, sizeof(d));
-        d[s] = 0;
-        priority_queue<HeapNode> Q;
-        Q.push(HeapNode(d[s], s));
-        while(!Q.empty()){
-            HeapNode t = Q.top();   Q.pop();
-            int x = t.i;
-            if(done[x]) continue;
-            done[x] = true;
-            for(int i = 0; i < G[x].size(); i++){
-                Edge& e = edges[G[x][i]];
-                if(d[e.to] > d[x] + e.dis){
-                    d[e.to] = d[x] + e.dis;
-                    p[e.to] = G[x][i];
-                    Q.push(HeapNode(d[e.to], e.to));
-                }
-            }
+            } 
         }
     }
 };
-
-int main() {
-    freopen("sample.in", "r", stdin);
-    freopen("sample.out", "w+", stdout);
-    Dijkstra* dij = new Dijkstra;
-    int n, s, f, t, d, a;
-    cin >> n >> s >> a;
-    dij->init(n);
-    while(cin >> f >> t >> d){
-        dij->addedge(f, t, d);
-        dij->addedge(t, f, d);
-    }
-    dij->dijkstra(s);
-    cout << dij->d[a] << endl;
-    delete dij;
-    return 0;
-}
