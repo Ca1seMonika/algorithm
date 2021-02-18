@@ -32,7 +32,7 @@ struct Side {
 };
 
 struct Dijkstra {
-    int n, m;
+    int n;
     vector<Side> sides;
     vector<int> G[maxn];
     int d[maxn];
@@ -54,7 +54,6 @@ struct Dijkstra {
     }
 
     void dijkstra(int x) {
-        m = sides.size();
         d[x] = 0;
         
         priority_queue<pii, vector<pii>, greater<pii>> Q;
