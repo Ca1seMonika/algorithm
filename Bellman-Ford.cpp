@@ -63,7 +63,7 @@ struct BellmanFord {
                     path[it.to] = t;
                     if(!inq[it.to]) {
                         q.push(it.to);
-                        inq[it.to] = true;
+                        inq[it.to] = 1;
                         if(++cnt[it.to] > n)    return false;
                     }
                 }
