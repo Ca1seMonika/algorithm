@@ -9,7 +9,7 @@ const int maxn = 20 + 5;
 int f1[maxn], f2[maxn], w[maxn], r[maxn], n;
 int p[100];//并查集
 
-bool cmp(const int& x, const int& y) {
+bool cmp(int x, int y) {
     return w[x] < w[y];
 }
 
