@@ -66,7 +66,7 @@ struct Dijkstra {
                 auto& it = sides[G[t.second][i]];
                 if(d[it.to] > d[t.second] + it.dist) {
                     d[it.to] = d[t.second] + it.dist;
-                    p[it.to] = t.second;
+                    p[it.to] = G[t.second][i];
                     Q.push(make_pair(d[it.to], it.to));
                 }
             } 
