@@ -1,41 +1,46 @@
-//****************************
-//
-//  最小生成树,Kruskal算法实现
-//
-#include<iostream>
-#include<algorithm>
+#include<bits/stdc++.h>
 using namespace std;
-const int maxn = 20 + 5;
-int f1[maxn], f2[maxn], w[maxn], r[maxn], n;
-int p[100];//并查集
-
-bool cmp(int x, int y) {
-    return w[x] < w[y];
-}
-
-int _find(int x) {
-    return p[x] == x ? x : p[x] = _find(p[x]);
-}
-
-int kruskal() {
-    int ans = 0;
-    for(int i = 0; i < n; i++)  r[i] = i;
-    for(int i = 0; i < 100; i++)    p[i] = i;
-    sort(r, r + n, cmp);
-    for(int i = 0; i < n; i++){
-        int e = r[i]; int x = _find(f1[e]); int y = _find(f2[e]);
-        if(x != y){
-            ans += w[e];
-            p[x] = y;
-        }
+const int maxn = 100 + 5;
+const int maxm = (maxn - 1) * maxn / 2;
+struct Edge {
+    Edge() = default;
+    Edge(int u, int v, int w): u(u), v(v), w(w) {}
+    int u, v, w;
+    bool operator< (const Edge& rhs) const {
+        return w < rhs.w;
     }
-    return ans;
+};
+int farr[maxn];
+int Find(int i) {
+    if(farr[i] < 0) return i;
+    farr[i] = Find(farr[i]);
+    return farr[i];
 }
-
+void Union(int a, int b) {
+    farr[a] = b;
+}
 int main() {
-    cin >> n;
-    for(int i = 0; i < n; i++){
-        cin >> f1[i] >> f2[i] >> w[i];
+    memset(farr, -1, sizeof farr); 
+    Edge edges[maxm];
+    vector<Edge> mst;
+    int n, m, cnt = 0;
+    cin >> n >> m;
+    for(int i = 0; i < m; i++) {
+        cin >> edges[i].u >> edges[i].v >> edges[i].w;
+
     }
-    cout << kruskal() << endl;
+    sort(edges, edges + m);
+    for(int i = 0; i < m; i++) {
+        Edge& e = edges[i];
+        int k = Find(e.u), j = Find(e.v);
+        if(k != j) {
+            mst.push_back(e);
+            Union(k, j);
+            if(++cnt < n - 1)   break; 
+        }
+    } 
+    for(auto& it: mst) {
+        cout << it.u << " " << it.v << " " << it.w << endl;
+    }
+    return 0;
 }
